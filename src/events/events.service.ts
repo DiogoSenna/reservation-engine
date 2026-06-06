@@ -71,7 +71,10 @@ export class EventsService {
   }
 
   private async withInventory(event: any) {
-    const inv = await this.redis.get(`event:${event.id}:inventory`)
+    const key = `event:${event.id}:inventory`
+    // Initialize the key atomically if not present (covers seeded events)
+    await this.redis.set(key, event.totalCapacity, 'NX')
+    const inv = await this.redis.get(key)
     return { ...event, availableTickets: inv !== null ? parseInt(inv) : event.totalCapacity }
   }
 }
