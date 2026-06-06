@@ -1,0 +1,32 @@
+{
+  "title": "Reservation Engine",
+  "uid": "reservation-engine",
+  "panels": [
+    {
+      "title": "Tickets Sold",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [{ "expr": "tickets_sold_total", "legendFormat": "Sold" }]
+    },
+    {
+      "title": "Purchase Failures by Reason",
+      "type": "timeseries",
+      "gridPos": { "x": 6, "y": 0, "w": 18, "h": 8 },
+      "targets": [{ "expr": "rate(purchase_failed_total[1m])", "legendFormat": "{{reason}}" }]
+    },
+    {
+      "title": "Purchase Latency p95",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "targets": [{ "expr": "histogram_quantile(0.95, rate(purchase_duration_seconds_bucket[1m]))", "legendFormat": "p95" }]
+    },
+    {
+      "title": "Active Inventory",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [{ "expr": "active_inventory", "legendFormat": "{{event_id}}" }]
+    }
+  ],
+  "schemaVersion": 38,
+  "version": 1
+}

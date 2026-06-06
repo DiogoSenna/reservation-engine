@@ -1,0 +1,7 @@
+apiVersion: 1
+providers:
+  - name: reservation
+    folder: Reservation Engine
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards
