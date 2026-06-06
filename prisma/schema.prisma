@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  user
+  admin
+}
+
+enum EventStatus {
+  active
+  cancelled
+  sold_out
+}
+
+enum TicketStatus {
+  pending
+  confirmed
+  cancelled
+}
+
+enum PaymentStatus {
+  initiated
+  success
+  failed
+  refunded
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  cardToken    String   @map("card_token")
+  role         UserRole @default(user)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  tickets     Ticket[]
+  paymentLogs PaymentLog[]
+
+  @@map("users")
+}
+
+model Event {
+  id            String      @id @default(uuid())
+  name          String
+  venue         String
+  eventDate     DateTime    @map("event_date")
+  totalCapacity Int         @map("total_capacity")
+  price         Decimal     @db.Decimal(10, 2)
+  status        EventStatus @default(active)
+  createdAt     DateTime    @default(now()) @map("created_at")
+
+  tickets     Ticket[]
+  paymentLogs PaymentLog[]
+
+  @@map("events")
+}
+
+model Ticket {
+  id             String       @id @default(uuid())
+  userId         String       @map("user_id")
+  eventId        String       @map("event_id")
+  status         TicketStatus
+  expiresAt      DateTime?    @map("expires_at")
+  idempotencyKey String       @unique @map("idempotency_key")
+  purchasedAt    DateTime     @default(now()) @map("purchased_at")
+
+  user        User         @relation(fields: [userId], references: [id])
+  event       Event        @relation(fields: [eventId], references: [id])
+  paymentLogs PaymentLog[]
+
+  @@map("tickets")
+}
+
+model PaymentLog {
+  id            String        @id @default(uuid())
+  ticketId      String        @map("ticket_id")
+  userId        String        @map("user_id")
+  eventId       String        @map("event_id")
+  amount        Decimal       @db.Decimal(10, 2)
+  status        PaymentStatus
+  failureReason String?       @map("failure_reason")
+  providerRef   String?       @map("provider_ref")
+  createdAt     DateTime      @default(now()) @map("created_at")
+
+  ticket Ticket @relation(fields: [ticketId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+  event  Event  @relation(fields: [eventId], references: [id])
+
+  @@map("payment_logs")
+}
