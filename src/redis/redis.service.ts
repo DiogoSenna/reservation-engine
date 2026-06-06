@@ -1,23 +1,21 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import Redis from 'ioredis'
-import { readFileSync } from 'fs'
-import { join } from 'path'
+import { DECR_INVENTORY, SLIDING_WINDOW } from './scripts'
 import type { AppConfig } from '../config/configuration'
 
 @Injectable()
 export class RedisService extends Redis implements OnModuleInit, OnModuleDestroy {
   readonly scripts: { decrInventory: string; slidingWindow: string }
 
-  constructor(private readonly config: ConfigService<AppConfig>) {
-    super(config.get('REDIS_URL', { infer: true })!, {
+  constructor(configService: ConfigService<AppConfig>) {
+    super(configService.get('REDIS_URL', { infer: true })!, {
       maxRetriesPerRequest: 3,
       lazyConnect: true,
     })
-    const scriptsDir = join(__dirname, 'scripts')
     this.scripts = {
-      decrInventory: readFileSync(join(scriptsDir, 'decr-inventory.lua'), 'utf-8'),
-      slidingWindow: readFileSync(join(scriptsDir, 'sliding-window.lua'), 'utf-8'),
+      decrInventory: DECR_INVENTORY,
+      slidingWindow: SLIDING_WINDOW,
     }
     this.on('error', (err) => console.error('Redis error:', err))
   }
