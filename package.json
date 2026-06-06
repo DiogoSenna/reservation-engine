@@ -46,7 +46,6 @@
   },
   "devDependencies": {
     "@nestjs/testing": "^11.1.24",
-    "@swc/core": "^1.15.40",
     "@testcontainers/postgresql": "^12.0.1",
     "@testcontainers/redis": "^12.0.1",
     "@types/bcrypt": "^6.0.0",
@@ -62,7 +61,6 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
-    "unplugin-swc": "^1.5.9",
     "vitest": "^4.1.8"
   }
 }
