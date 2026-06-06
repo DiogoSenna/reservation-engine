@@ -12,7 +12,7 @@
     "seed": "tsx scripts/seed.ts",
     "test": "vitest run tests/unit",
     "test:watch": "vitest tests/unit",
-    "test:integration": "vitest run tests/integration",
+    "test:integration": "TESTCONTAINERS_RYUK_DISABLED=true vitest run tests/integration",
     "test:coverage": "vitest run --coverage",
     "generate": "prisma generate"
   },
