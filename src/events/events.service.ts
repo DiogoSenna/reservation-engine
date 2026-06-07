@@ -11,12 +11,22 @@ export class EventsService {
     private readonly redis: RedisService,
   ) {}
 
-  async findAll() {
-    const events = await this.prisma.event.findMany({
-      where: { status: { not: 'cancelled' } },
-      orderBy: { eventDate: 'asc' },
-    })
-    return Promise.all(events.map((e) => this.withInventory(e)))
+  async findAll(userId?: string) {
+    const [events, purchasedEventIds] = await Promise.all([
+      this.prisma.event.findMany({
+        where: { status: { not: 'cancelled' } },
+        orderBy: { eventDate: 'asc' },
+      }),
+      userId
+        ? this.prisma.ticket
+            .findMany({ where: { userId, status: 'confirmed' }, select: { eventId: true } })
+            .then((tickets) => new Set(tickets.map((t) => t.eventId)))
+        : Promise.resolve(new Set<string>()),
+    ])
+
+    return Promise.all(
+      events.map((e) => this.withInventory(e, purchasedEventIds.has(e.id))),
+    )
   }
 
   async findOne(id: string) {
@@ -70,11 +80,14 @@ export class EventsService {
     await this.redis.del(`event:${id}:inventory`)
   }
 
-  private async withInventory(event: any) {
+  private async withInventory(event: any, userHasPurchased = false) {
     const key = `event:${event.id}:inventory`
-    // Initialize the key atomically if not present (covers seeded events)
     await this.redis.set(key, event.totalCapacity, 'NX')
     const inv = await this.redis.get(key)
-    return { ...event, availableTickets: inv !== null ? parseInt(inv) : event.totalCapacity }
+    return {
+      ...event,
+      availableTickets: inv !== null ? parseInt(inv) : event.totalCapacity,
+      userHasPurchased,
+    }
   }
 }
