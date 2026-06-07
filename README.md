@@ -98,3 +98,11 @@ k6 run tests/load/purchase.k6.js
 ## Tech Stack
 
 Node.js 20, TypeScript, NestJS 11 (Fastify adapter), Prisma 7, PostgreSQL 16, Redis 7, ioredis 5, Redlock 4, prom-client 15, zod 4, Vitest 4, Testcontainers 12, k6
+
+## How It Was Built
+
+Built with **[Claude Code](https://claude.ai/code)** using a **Spec-Driven Development** workflow powered by **[Superpowers](https://github.com/superfoo/superpowers)** and **OpenSpec**.
+
+Each capability (auth, events, ticket purchase, payment mock, rate limiting, observability) was designed as a structured spec before any code was written. The specs live in [`openspec/specs/`](openspec/specs/) and are linked to the implementation plan and proposal in [`openspec/changes/archive/`](openspec/changes/archive/).
+
+Artifacts: [proposal](openspec/changes/archive/2026-06-07-reservation-engine/proposal.md) · [design](openspec/changes/archive/2026-06-07-reservation-engine/design.md) · [tasks](openspec/changes/archive/2026-06-07-reservation-engine/tasks.md)
