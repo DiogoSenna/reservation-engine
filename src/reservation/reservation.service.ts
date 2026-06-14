@@ -6,7 +6,7 @@ import { RedlockService } from '../redis/redlock.service'
 import { PaymentService } from '../payment/payment.service'
 import { MetricsService } from '../metrics/metrics.service'
 import type { Lock } from 'redlock'
-import type { PurchaseOutcome } from '../../types'
+import type { PurchaseOutcome } from '../types'
 
 interface PurchaseOptions {
   userId: string

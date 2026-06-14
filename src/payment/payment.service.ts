@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { MetricsService } from '../metrics/metrics.service'
 import type { AppConfig } from '../config/configuration'
-import type { PaymentFailureReason } from '../../types'
+import type { PaymentFailureReason } from '../types'
 
 interface ChargeOptions {
   cardToken: string
