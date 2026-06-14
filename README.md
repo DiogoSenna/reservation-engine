@@ -56,6 +56,18 @@ docker compose up -d
 
 Grafana: `http://localhost:3001` — admin / admin
 
+## Resetting the Database
+
+After `docker compose down -v` (which wipes all volumes), re-apply migrations and re-seed:
+
+```bash
+docker compose up postgres redis -d   # start infra first
+npm run migrate:deploy                # re-apply all migrations
+npm run seed                          # re-seed users and events
+```
+
+Then bring up the rest of the stack as normal.
+
 ## Running Tests
 
 ```bash

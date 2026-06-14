@@ -14,7 +14,7 @@ import { Roles } from '../auth/decorators/roles.decorator'
 import { CurrentUser } from '../auth/decorators/current-user.decorator'
 import { ReservationService } from '../reservation/reservation.service'
 import { PrismaService } from '../database/prisma.service'
-import type { JwtPayload } from '../../types'
+import type { JwtPayload } from '../types'
 
 @Controller('events')
 export class EventsController {
