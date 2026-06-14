@@ -7,6 +7,7 @@ import { EventsService } from './events.service'
 import { CreateEventDto } from './dto/create-event.dto'
 import { UpdateEventDto } from './dto/update-event.dto'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard'
 import { RolesGuard } from '../auth/guards/roles.guard'
 import { RateLimitGuard } from '../rate-limit/rate-limit.guard'
 import { Roles } from '../auth/decorators/roles.decorator'
@@ -24,7 +25,10 @@ export class EventsController {
   ) {}
 
   @Get()
-  findAll() { return this.events.findAll() }
+  @UseGuards(OptionalJwtAuthGuard)
+  findAll(@CurrentUser() user?: JwtPayload) {
+    return this.events.findAll(user?.sub)
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) { return this.events.findOne(id) }
