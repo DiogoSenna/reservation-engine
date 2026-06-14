@@ -4,7 +4,7 @@ import {
 } from '@nestjs/common'
 import { RateLimitService } from './rate-limit.service'
 import { MetricsService } from '../metrics/metrics.service'
-import type { JwtPayload } from '../../types'
+import type { JwtPayload } from '../types'
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {
