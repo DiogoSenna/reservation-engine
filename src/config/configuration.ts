@@ -1,17 +1,30 @@
 import { z } from 'zod'
 
-const schema = z.object({
-  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-  PORT: z.coerce.number().default(3000),
-  DATABASE_URL: z.string(),
-  REDIS_URL: z.string(),
-  JWT_SECRET: z.string().min(16),
-  JWT_EXPIRY: z.string().default('8h'),
-  PAYMENT_SUCCESS_RATE: z.coerce.number().min(0).max(1).default(0.85),
-  PAYMENT_FAILURE_MODES: z.string().default('card_declined,timeout,fraud'),
-  PAYMENT_MIN_LATENCY_MS: z.coerce.number().default(50),
-  PAYMENT_MAX_LATENCY_MS: z.coerce.number().default(300),
-})
+const schema = z
+  .object({
+    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    PORT: z.coerce.number().default(3000),
+    DATABASE_URL: z.string(),
+    REDIS_URL: z.string(),
+    JWT_SECRET: z.string().min(16),
+    JWT_EXPIRY: z.string().default('8h'),
+    PAYMENT_PROVIDER: z.enum(['stripe', 'mock']).default('mock'),
+    STRIPE_SECRET_KEY: z.string().optional(),
+    STRIPE_WEBHOOK_SECRET: z.string().optional(),
+    PAYMENT_SUCCESS_RATE: z.coerce.number().min(0).max(1).default(0.85),
+    PAYMENT_FAILURE_MODES: z.string().default('card_declined,timeout,fraud'),
+    PAYMENT_MIN_LATENCY_MS: z.coerce.number().default(50),
+    PAYMENT_MAX_LATENCY_MS: z.coerce.number().default(300),
+  })
+  .refine(
+    (data) =>
+      data.PAYMENT_PROVIDER !== 'stripe' ||
+      (!!data.STRIPE_SECRET_KEY && !!data.STRIPE_WEBHOOK_SECRET),
+    {
+      message:
+        'STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET are required when PAYMENT_PROVIDER=stripe',
+    },
+  )
 
 export type AppConfig = z.infer<typeof schema>
 

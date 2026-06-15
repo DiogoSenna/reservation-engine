@@ -8,6 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({ logger: true }),
+    { rawBody: true },
   )
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))

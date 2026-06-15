@@ -8,6 +8,7 @@ import { HealthModule } from './health/health.module'
 import { AuthModule } from './auth/auth.module'
 import { EventsModule } from './events/events.module'
 import { TicketsModule } from './tickets/tickets.module'
+import { WebhooksModule } from './webhooks/webhooks.module'
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { TicketsModule } from './tickets/tickets.module'
     AuthModule,
     EventsModule,
     TicketsModule,
+    WebhooksModule,
   ],
 })
 export class AppModule {}

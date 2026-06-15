@@ -10,7 +10,7 @@ export class MetricsService {
   readonly ticketsSoldTotal: Counter
   readonly purchaseFailedTotal: Counter<'reason'>
   readonly purchaseDurationSeconds: Histogram
-  readonly paymentMockDurationSeconds: Histogram
+  readonly paymentDurationSeconds: Histogram<'provider'>
   readonly activeInventory: Gauge<'event_id'>
   readonly redisLockAcquisitionsTotal: Counter
   readonly redisLockFailuresTotal: Counter
@@ -36,9 +36,10 @@ export class MetricsService {
       buckets: [0.05, 0.1, 0.25, 0.5, 1, 2, 5],
       registers: [this.register],
     })
-    this.paymentMockDurationSeconds = new Histogram({
-      name: 'payment_mock_duration_seconds',
-      help: 'Payment mock call duration',
+    this.paymentDurationSeconds = new Histogram({
+      name: 'payment_duration_seconds',
+      help: 'Payment provider call duration',
+      labelNames: ['provider'],
       buckets: [0.01, 0.05, 0.1, 0.25, 0.5, 1],
       registers: [this.register],
     })
