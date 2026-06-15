@@ -35,7 +35,7 @@ export class PaymentService {
   }
 
   async charge({ idempotencyKey }: ChargeOptions): Promise<ChargeResult> {
-    const end = this.metrics.paymentMockDurationSeconds.startTimer()
+    const end = this.metrics.paymentDurationSeconds.startTimer({ provider: 'mock' })
     const latency = this.minLatencyMs + Math.random() * (this.maxLatencyMs - this.minLatencyMs)
     await new Promise((r) => setTimeout(r, latency))
     end()

@@ -8,7 +8,7 @@ describe('PaymentService', () => {
 
   const mockConfig = { get: vi.fn() }
   const mockMetrics = {
-    paymentMockDurationSeconds: { startTimer: vi.fn().mockReturnValue(() => {}) },
+    paymentDurationSeconds: { startTimer: vi.fn().mockReturnValue(() => {}) },
   }
 
   beforeEach(async () => {
