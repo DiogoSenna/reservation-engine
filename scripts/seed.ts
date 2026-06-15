@@ -12,11 +12,13 @@ async function main() {
 
   await prisma.user.createMany({
     data: [
-      { email: 'admin@example.com', passwordHash, cardToken: 'tok_admin', role: 'admin' },
-      ...Array.from({ length: 20 }, (_, i) => ({
-        email: `user${i + 1}@example.com`,
+      { email: 'admin@example.com', passwordHash, cardToken: 'pm_card_visa', role: 'admin' },
+      // user1 uses a card that always declines — useful for testing the payment_failed path
+      { email: 'user1@example.com', passwordHash, cardToken: 'pm_card_decline', role: 'user' },
+      ...Array.from({ length: 19 }, (_, i) => ({
+        email: `user${i + 2}@example.com`,
         passwordHash,
-        cardToken: `tok_visa_user${i + 1}`,
+        cardToken: 'pm_card_visa',
         role: 'user' as const,
       })),
     ],
