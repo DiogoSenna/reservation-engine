@@ -8,19 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({ logger: true }),
-  )
-
-  app.getHttpAdapter().getInstance().addContentTypeParser(
-    'application/json',
-    { parseAs: 'buffer' },
-    (req: any, body: Buffer, done: (err: Error | null, body?: unknown) => void) => {
-      req.rawBody = body
-      try {
-        done(null, JSON.parse(body.toString()))
-      } catch (err) {
-        done(err as Error)
-      }
-    },
+    { rawBody: true },
   )
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
