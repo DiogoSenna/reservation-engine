@@ -8,7 +8,7 @@ import Stripe from 'stripe'
 @Injectable()
 export class StripePaymentProvider extends PaymentService {
   constructor(
-    @Inject('STRIPE_CLIENT') private readonly stripe: Stripe | null,
+    @Inject('STRIPE_CLIENT') private readonly stripe: InstanceType<typeof Stripe> | null,
     private readonly metrics: MetricsService,
   ) {
     super()
